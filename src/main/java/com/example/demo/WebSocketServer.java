@@ -49,7 +49,7 @@ public class WebSocketServer {
         addOnlineCount();
         logger.info(userName + "加入webSocket！当前人数为" + onlineNum);
         try {
-            sendMessage(session, "欢迎" + userName + "加入连接！");
+            sendMessage(session, "欢迎" + userName + "加入聊天室！");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,12 +65,13 @@ public class WebSocketServer {
 
     //收到客户端信息
     @OnMessage
-    public void onMessage(String message) throws IOException {
-        message = "客户端：" + message + ",已收到";
-        System.out.println(message);
+    public void onMessage(Session curSession, String message) throws IOException {
+        logger.info(message);
         for (Session session : sessionPools.values()) {
             try {
-                sendMessage(session, message);
+                if(curSession != session){
+                    sendMessage(session, message);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 continue;
